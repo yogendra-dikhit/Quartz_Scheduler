@@ -1,0 +1,39 @@
+version: "3"
+services:
+  task-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: task-scheduler:latest
+    deploy:
+      mode: replicated
+      replicas: 3 
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/quartzDB?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+    networks:
+      - scheduler-mysql
+    
+  db:
+    container_name: mysqldb
+    image: mysql/mysql-server:8.0.23
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: quartzDB
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - ./mysql-data/8.0.23:/var/lib/mysql
+    ports:
+      - 3307:3306
+    expose:
+      - 3307
+    networks:
+      - scheduler-mysql
+networks:
+  scheduler-mysql:
+    driver: bridge

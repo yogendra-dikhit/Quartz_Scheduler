@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: 'Task Scheduler'
+  profiles:
+    active:
+    - '@spring.profiles.active@'

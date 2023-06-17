@@ -1,0 +1,29 @@
+jwt:
+  secret: zxcvbnm1234567890
+spring:
+  datasource:
+    password: root
+    url: jdbc:mysql://localhost:3307/quartzDB?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false
+    username: root
+    tomcat:
+      max-active: 100
+      max-wait: 5000
+      min-idle: 10
+      max-idle: 15
+    hikari:
+      connection-timeout: 150000
+      maximum-pool-size: 5
+      minimum-idle: 10
+      isolate-internal-queries: false
+      initialization-fail-timeout: -1
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  jackson:
+    date-format: yyyy/MM/dd HH:mm:ss
+    time-zone: GMT+5:30
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update

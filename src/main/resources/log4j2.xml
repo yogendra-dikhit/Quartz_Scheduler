@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration name="dsem-Log" monitorInterval="10" status="warn">
+	<Properties>
+		<!-- app: set as Java Property by init script -->
+		<Property name="app">task-scheduler</Property>
+		<!-- java.logdir: set as Java Property by init script -->
+		<Property name="app.logdir">./log</Property>
+		<Property name="LOG_PATTERN"> %date{yyyy-MM-dd HH:mm:ss.SSS}{UTC}Z %-5level
+			[%15.15thread] %-40.40logger{1.} %mdc : %msg%n </Property>
+	</Properties>
+	
+	<Appenders>
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<ThresholdFilter level="debug" />
+		</Console>
+
+		<RollingFile name="FILE" bufferedIO="true" append="true" filePattern="${sys:app.logdir}/${sys:app}.log.%d{yyyy-MM-dd}.gz" 
+		fileName="${sys:app.logdir}/${sys:app}.log">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<ThresholdFilter level="info" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="FILE_DEBUG" bufferedIO="true" append="true" filePattern="${sys:app.logdir}/${sys:app}-debug.log.%d{yyyy-MM-dd}.gz" 
+		fileName="${sys:app.logdir}/${sys:app}-debug.log">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<ThresholdFilter level="debug" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
+
+	</Appenders>
+
+	<Loggers>
+		<Logger name="com.taskscheduler" level="debug" additivity="false">
+			<AppenderRef ref="FILE" />
+			<AppenderRef ref="FILE_DEBUG" />
+			<AppenderRef ref="CONSOLE" />
+		</Logger>
+
+		<Logger name="org.springframework" level="info" additivity="false">
+			<AppenderRef ref="FILE" />
+			<AppenderRef ref="FILE_DEBUG" />
+			<AppenderRef ref="CONSOLE" />
+		</Logger>
+
+		<Root level="error">
+			<AppenderRef ref="FILE" />
+			<AppenderRef ref="FILE_DEBUG" />
+			<AppenderRef ref="CONSOLE" />
+		</Root>
+	</Loggers>
+
+</Configuration>
